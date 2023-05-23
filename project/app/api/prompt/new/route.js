@@ -7,9 +7,13 @@ export const POST = async (request) => {
     try {
         await connectToDB();
         const newPrompt = new Prompt({ creator: userId, prompt, tag });
-
-        await newPrompt.save();
-        return new Response(JSON.stringify(newPrompt), { status: 201 })
+        if(Object.keys(newPrompt).length===0){
+            await newPrompt.save();
+            return new Response(JSON.stringify(newPrompt), { status: 201 });
+        }else{
+            return new Response('Unauthenticated user',{status:500});
+        }
+      
     } catch (error) {
         return new Response("Failed to create a new prompt", { status: 500 });
     }
